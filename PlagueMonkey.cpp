@@ -1,6 +1,6 @@
 #include "raylib.h"
+#include <stdio.h>
 //Plague Doctor FTW
-
 
 
 int main()
@@ -18,7 +18,10 @@ int main()
     bool isJumping{false}; 
     int jumpDirection{MOVING_UP}, plagueDoctorFacing{1};
 
-    int ratVel {-20}; //speed of rat across the screen
+
+    bool collision{};
+    int ratVel {-10}; //speed of rat across the screen
+   
    
 InitWindow(windowWidth, windowHeight, WindowName);
 
@@ -46,10 +49,6 @@ InitWindow(windowWidth, windowHeight, WindowName);
     Rectangle ratRec = {float (rat.width) , 0, 105, 50};    
 
     Vector2 ratPos = {ratPos.x = windowWidth - ratRec.width, ratPos.y = windowHeight- 20 - ratRec.height};
-
-    
-
-
    
 
    //background
@@ -99,7 +98,6 @@ BeginDrawing();
    ClearBackground(WHITE);
    
 
-
 DrawTextureEx(background, (Vector2){ scrollingBack, 20 }, 0.0f, 2.0f, WHITE);
             DrawTextureEx(background, (Vector2){ background.width*2 + scrollingBack, 20 }, 0.0f, 2.0f, WHITE);
 
@@ -118,6 +116,11 @@ DrawTextEx(font, msg, fontPosition, (float)font.baseSize*2.0f, 10, RED);
 DrawTextureRec(plagueDoctor, plagueDoctorRec, plagueDoctorPos, WHITE);  // Draw part of the texture
 
 DrawTextureRec (rat, ratRec,ratPos,WHITE);
+
+
+	if(CheckCollisionRecs(plagueDoctorRec,ratRec)){
+		collision = true;
+	}
 
         // obselete on hold for testing ---> plagueDoctorRec_posX += direction; if (plagueDoctorRec_posX<0||plagueDoctorRec_posX>1200){direction *=-1;}
          // if(plagueDoctor.X<0){PlagueDoctor.X=0}
@@ -157,12 +160,28 @@ DrawTextureRec (rat, ratRec,ratPos,WHITE);
                 jumpDirection = MOVING_UP;
             }
 
-
         }
 
           ratPos.x += ratVel;
 
+          if (ratPos.x < -rat.width) 
+          {
+            ratPos.x = windowWidth + 100;
+        }
+
+
+	if (collision){
+DrawTextureRec(plagueDoctor,plagueDoctorRec,plagueDoctorPos,RED);
+	}
+	else{
+DrawTextureRec(plagueDoctor,plagueDoctorRec,plagueDoctorPos,WHITE);
+DrawTextureRec(rat,ratRec,ratPos,WHITE);
+	}
+
+
    ClearBackground(WHITE);
+
+
 EndDrawing();
 } 
 
