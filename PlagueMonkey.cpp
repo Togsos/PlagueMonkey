@@ -2,6 +2,15 @@
 #include <stdio.h>
 //Plague Doctor FTW
 
+struct  Anim
+{
+ Rectangle rec;
+ Vector2 pos;
+ int frame;
+ float updateTime;
+ float runningTime;
+};
+
 
 int main()
 
@@ -10,20 +19,22 @@ int main()
    const int windowHeight {750};  //defines the window heights
    char WindowName[] = "Plague Doctor"; //names the pop up winddow "Plague Doctor"
 
+
+InitWindow(windowWidth, windowHeight, WindowName);
+
     const int jumpHeight{200};//sets the maximum jump height
     const int MOVING_UP{-1}; //control the jump speed
-    const int DIRECTION{-1};
+    const int DIRECTION{-1}; 
     const int JUMP_INCREMENT{10}; //control the jump increment
 
     bool isJumping{false}; 
     int jumpDirection{MOVING_UP}, plagueDoctorFacing{1};
 
-
+    
     bool collision{};
+
     int ratVel {-10}; //speed of rat across the screen
-   
-   
-InitWindow(windowWidth, windowHeight, WindowName);
+
 
    //onscreen text
   const char msg[] = "Merrie Olde England 1349..."; // unchanging message  
@@ -43,13 +54,33 @@ InitWindow(windowWidth, windowHeight, WindowName);
     int runningTime = 0;
     int runningSpeed = 8;    
 
-
     //Rat collision object
     Texture2D rat = LoadTexture("resources/textures/rat.png");
-    Rectangle ratRec = {float (rat.width) , 0, 105, 50};    
-
-    Vector2 ratPos = {ratPos.x = windowWidth - ratRec.width, ratPos.y = windowHeight- 20 - ratRec.height};
+  //  Rectangle ratRec = {float (rat.width) , 0, 105, 50};    
+   // Vector2 ratPos = {ratPos.x = windowWidth - ratRec.width, ratPos.y = windowHeight- 20 - ratRec.height};
    
+
+  Anim plagueDoctorAnim;
+    plagueDoctorAnim.rec.width = plagueDoctor.width/6;
+    plagueDoctorAnim.rec.height = plagueDoctor.height;
+    plagueDoctorAnim.rec.x = 0;
+    plagueDoctorAnim.rec.y = 0;
+    plagueDoctorAnim.pos.x = windowWidth/2 - plagueDoctorAnim.rec.width/2;
+    plagueDoctorAnim.pos.y = windowHeight - plagueDoctorAnim.rec.height;
+    plagueDoctorAnim.frame = 0;
+    plagueDoctorAnim.updateTime = 1.0/12.0;
+    plagueDoctorAnim.runningTime = 0.0;
+
+    Rectangle ratRec;
+    ratRec.width = rat.width;
+    ratRec.height = rat.height;
+    ratRec.x = 0;
+    ratRec.y = 0;
+    Vector2 ratPos;
+    ratPos.x = windowWidth - ratRec.width;
+    ratPos.y = windowHeight - ratRec.height;
+
+
 
    //background
     Texture2D background = LoadTexture("resources/textures/england_background.png");
@@ -83,6 +114,30 @@ while(!WindowShouldClose()) //as long as the window is not closed do the actions
         }
 
 
+
+
+
+Rectangle ratRec{
+    ratPos.x,
+    ratPos.y,
+    ratRec.height,
+    ratRec.width,
+};
+
+Rectangle plagueDoctorRec{
+    plagueDoctorAnim.pos.x,
+    plagueDoctorAnim.pos.y,
+    plagueDoctorAnim.rec.height,
+    plagueDoctorAnim.rec.width
+};
+
+if(CheckCollisionRecs(plagueDoctorRec,ratRec)){
+		collision = true;
+	}
+
+
+
+
 //scrolling speeds
  scrollingBack -= 0.1f;
         scrollingMid -= 0.5f;
@@ -113,14 +168,12 @@ DrawTextEx(font, msg, fontPosition, (float)font.baseSize*2.0f, 10, RED);
 
 
 
-DrawTextureRec(plagueDoctor, plagueDoctorRec, plagueDoctorPos, WHITE);  // Draw part of the texture
+DrawTextureRec(plagueDoctor, plagueDoctorRec, plagueDoctorPos, WHITE);  
 
 DrawTextureRec (rat, ratRec,ratPos,WHITE);
 
 
-	if(CheckCollisionRecs(plagueDoctorRec,ratRec)){
-		collision = true;
-	}
+	
 
         // obselete on hold for testing ---> plagueDoctorRec_posX += direction; if (plagueDoctorRec_posX<0||plagueDoctorRec_posX>1200){direction *=-1;}
          // if(plagueDoctor.X<0){PlagueDoctor.X=0}
@@ -164,23 +217,27 @@ DrawTextureRec (rat, ratRec,ratPos,WHITE);
 
           ratPos.x += ratVel;
 
+
+        //rat does a repeat run once it goes off the screen
           if (ratPos.x < -rat.width) 
           {
             ratPos.x = windowWidth + 100;
         }
 
 
-	if (collision){
-DrawTextureRec(plagueDoctor,plagueDoctorRec,plagueDoctorPos,RED);
-	}
-	else{
-DrawTextureRec(plagueDoctor,plagueDoctorRec,plagueDoctorPos,WHITE);
-DrawTextureRec(rat,ratRec,ratPos,WHITE);
-	}
 
 
    ClearBackground(WHITE);
 
+if (collision)
+{
+
+}
+else
+{
+    DrawTextureRec(plagueDoctor,plagueDoctorAnim.rec, plagueDoctor.pos,WHITE);
+    DrawTextureRec(rat, ratRec, ratPos,WHITE);
+}
 
 EndDrawing();
 } 
