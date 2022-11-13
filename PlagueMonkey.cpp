@@ -76,7 +76,7 @@ DrawTextEx(font, msg, fontPosition, (float)font.baseSize*2.0f, 10, RED);
 
   DrawTextureRec(plagueDoctor, plagueDoctorRec, plagueDoctorPos, WHITE);
 
-        if (IsKeyPressed(KEY_SPACE) && !isJumping)
+        if (IsKeyPressed(KEY_UP) && !isJumping)
         {
             isJumping = true;
         }
