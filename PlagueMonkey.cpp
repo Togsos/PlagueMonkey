@@ -47,7 +47,7 @@ int main()
     const float BOTTOM_OF_JUMP{windowHeight - 20 - plagueDoctorRec.height};                                                                                            //  -20 to raise PlagueDoctor off the ground
     Vector2 plagueDoctorPos = {windowWidth / 6 - plagueDoctorRec.width / 6, BOTTOM_OF_JUMP};                                                                           // initial postioning of the sprite
 
-    int currentFrame = 0;
+    int currentFrame = 0;  //starting point
     int runningTime = 0;
     int runningSpeed = 8;
 
@@ -216,7 +216,7 @@ int main()
         }
         else
         {
-            // this stuff won't happen without a collision happening
+            // this stuff doesn't happen without a collision happening
 
             // DrawTextureRec(plagueDoctor, plagueDoctorAnim.rec, plagueDoctorAnim.pos, WHITE);
             // DrawTextureRec(rat, ratRec, ratPos, WHITE);
