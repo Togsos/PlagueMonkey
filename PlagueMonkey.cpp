@@ -35,17 +35,10 @@ InitWindow(windowWidth, windowHeight, WindowName);
     const float BOTTOM_OF_JUMP{windowHeight - plagueDoctorRec.height};
     Vector2 plagueDoctorPos = {windowWidth / 6 - plagueDoctorRec.width / 6, BOTTOM_OF_JUMP}; //initial postioning of the sprite
 
-
     int currentFrame = 0;
-
-
     int framesCounter = 0;
     int framesSpeed = 8;    
-
-
-
-
-
+    
 
    //background
    Texture2D background = LoadTexture("resources/textures/england_background.png");
@@ -60,9 +53,7 @@ InitWindow(windowWidth, windowHeight, WindowName);
 SetTargetFPS(60); //refresh rate
 
 
-
 while(!WindowShouldClose()) //as long as the window is not closed do the actions contained within curly bracers
-
 
 {
 
@@ -79,9 +70,6 @@ while(!WindowShouldClose()) //as long as the window is not closed do the actions
         }
 
 
-
-
-
 //scrolling speeds
  scrollingBack -= 0.1f;
         scrollingMid -= 0.5f;
@@ -91,7 +79,6 @@ while(!WindowShouldClose()) //as long as the window is not closed do the actions
         if (scrollingBack <= -background.width*2) scrollingBack = 0;
         if (scrollingMid <= -midground.width*2) scrollingMid = 0;
         if (scrollingFore <= -foreground.width*2) scrollingFore = 0;
-
 
 
 BeginDrawing();
@@ -112,7 +99,7 @@ DrawTextureEx(background, (Vector2){ scrollingBack, 20 }, 0.0f, 2.0f, WHITE);
 
 DrawTextEx(font, msg, fontPosition, (float)font.baseSize*2.0f, 10, RED);
 
-  DrawTextureRec(plagueDoctor, plagueDoctorRec, plagueDoctorPos, WHITE);
+
 
 DrawTextureRec(plagueDoctor, plagueDoctorRec, plagueDoctorPos, WHITE);  // Draw part of the texture
 
