@@ -1,6 +1,8 @@
 #include "raylib.h"
 //Plague Doctor FTW
 
+
+
 int main()
 
 {
@@ -33,6 +35,18 @@ InitWindow(windowWidth, windowHeight, WindowName);
     const float BOTTOM_OF_JUMP{windowHeight - plagueDoctorRec.height};
     Vector2 plagueDoctorPos = {windowWidth / 6 - plagueDoctorRec.width / 6, BOTTOM_OF_JUMP}; //initial postioning of the sprite
 
+
+    int currentFrame = 0;
+
+
+    int framesCounter = 0;
+    int framesSpeed = 8;    
+
+
+
+
+
+
    //background
    Texture2D background = LoadTexture("resources/textures/england_background.png");
     Texture2D midground = LoadTexture("resources/textures/england_midground.png");
@@ -42,6 +56,7 @@ InitWindow(windowWidth, windowHeight, WindowName);
     float scrollingMid = 0.0f;
     float scrollingFore = 0.0f;
 
+
 SetTargetFPS(60); //refresh rate
 
 
@@ -50,6 +65,23 @@ while(!WindowShouldClose()) //as long as the window is not closed do the actions
 
 
 {
+
+    framesCounter++;
+
+        if (framesCounter >= (60/framesSpeed))
+        {
+            framesCounter = 0;
+            currentFrame++;
+
+            if (currentFrame > 5) currentFrame = 0;
+
+            plagueDoctorRec.x = (float)currentFrame*(float)plagueDoctor.width/6;
+        }
+
+
+
+
+
 //scrolling speeds
  scrollingBack -= 0.1f;
         scrollingMid -= 0.5f;
@@ -61,9 +93,12 @@ while(!WindowShouldClose()) //as long as the window is not closed do the actions
         if (scrollingFore <= -foreground.width*2) scrollingFore = 0;
 
 
+
 BeginDrawing();
    ClearBackground(WHITE);
    
+
+
 DrawTextureEx(background, (Vector2){ scrollingBack, 20 }, 0.0f, 2.0f, WHITE);
             DrawTextureEx(background, (Vector2){ background.width*2 + scrollingBack, 20 }, 0.0f, 2.0f, WHITE);
 
@@ -79,6 +114,12 @@ DrawTextEx(font, msg, fontPosition, (float)font.baseSize*2.0f, 10, RED);
 
   DrawTextureRec(plagueDoctor, plagueDoctorRec, plagueDoctorPos, WHITE);
 
+DrawTextureRec(plagueDoctor, plagueDoctorRec, plagueDoctorPos, WHITE);  // Draw part of the texture
+
+
+        // obselete on hold for testing ---> plagueDoctorRec_posX += direction; if (plagueDoctorRec_posX<0||plagueDoctorRec_posX>1200){direction *=-1;}
+         // if(plagueDoctor.X<0){PlagueDoctor.X=0}
+
         if (IsKeyPressed(KEY_UP) && !isJumping)
         {
             isJumping = true;
@@ -92,7 +133,7 @@ DrawTextEx(font, msg, fontPosition, (float)font.baseSize*2.0f, 10, RED);
         else if (IsKeyDown(KEY_RIGHT))
         {
             plagueDoctorFacing = 1; //facing right
-            plagueDoctorPos.x += 10;//use a compond assignment for pos.x
+            plagueDoctorPos.x += 10;//use a compond assignment for pos.x moving it by 10
         }
         plagueDoctorRec.width = 128 * plagueDoctorFacing;
 
@@ -118,8 +159,12 @@ DrawTextEx(font, msg, fontPosition, (float)font.baseSize*2.0f, 10, RED);
    ClearBackground(WHITE);
 EndDrawing();
 } 
+
 UnloadFont(font);
 UnloadTexture(plagueDoctor);
+UnloadTexture(background);
+UnloadTexture(midground);
+UnloadTexture(foreground);
 
 CloseWindow();
 
