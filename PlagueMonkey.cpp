@@ -10,7 +10,7 @@ int main()
    const int windowHeight {750};  //defines the window heights
    char WindowName[] = "Plague Doctor"; //names the pop up winddow "Plague Doctor"
 
-   const int jumpHeight{150};//sets the maximum jump height
+   const int jumpHeight{200};//sets the maximum jump height
     const int MOVING_UP{-1}; //control the jump speed
     const int CHANGE_DIRECTION{-1};
     const int JUMP_INCREMENT{10}; //control the jump increment
@@ -32,7 +32,7 @@ InitWindow(windowWidth, windowHeight, WindowName);
     Texture2D plagueDoctor = LoadTexture("resources/textures/plagueDoctor.png"); //loading in the sprite
     Rectangle plagueDoctorRec = {float((plagueDoctor.width /6) * frame), 0, 128, 128}; //there are 6 conditions of the sprite to be used
     const float TOP_OF_JUMP{windowHeight - plagueDoctorRec.height - jumpHeight};
-    const float BOTTOM_OF_JUMP{windowHeight - plagueDoctorRec.height};
+    const float BOTTOM_OF_JUMP{windowHeight-20 - plagueDoctorRec.height};
     Vector2 plagueDoctorPos = {windowWidth / 6 - plagueDoctorRec.width / 6, BOTTOM_OF_JUMP}; //initial postioning of the sprite
 
     int currentFrame = 0;
@@ -56,6 +56,8 @@ SetTargetFPS(60); //refresh rate
 while(!WindowShouldClose()) //as long as the window is not closed do the actions contained within curly bracers
 
 {
+
+// redundant took out gravity const float deltaTime{GetFrameTime()}
 
     framesCounter++;
 
