@@ -10,14 +10,15 @@ int main()
    const int windowHeight {750};  //defines the window heights
    char WindowName[] = "Plague Doctor"; //names the pop up winddow "Plague Doctor"
 
-   const int jumpHeight{200};//sets the maximum jump height
+    const int jumpHeight{200};//sets the maximum jump height
     const int MOVING_UP{-1}; //control the jump speed
-    const int CHANGE_DIRECTION{-1};
+    const int DIRECTION{-1};
     const int JUMP_INCREMENT{10}; //control the jump increment
 
     bool isJumping{false}; 
     int jumpDirection{MOVING_UP}, plagueDoctorFacing{1};
 
+    int ratVel {-20}; //speed of rat across the screen
    
 InitWindow(windowWidth, windowHeight, WindowName);
 
@@ -27,21 +28,32 @@ InitWindow(windowWidth, windowHeight, WindowName);
    Vector2 fontPosition = { windowWidth/3.0f - MeasureTextEx
    (font, msg, (float)font.baseSize*2.0f, 10).x/10,windowHeight/4.0f - font.baseSize}; //positioning the font based of halves and quarters of the width of the screen
 
-   //sprite
+   //plagueDoctor sprite
    int frame{0};
     Texture2D plagueDoctor = LoadTexture("resources/textures/plagueDoctor.png"); //loading in the sprite
-    Rectangle plagueDoctorRec = {float((plagueDoctor.width /6) * frame), 0, 128, 128}; //there are 6 conditions of the sprite to be used
-    const float TOP_OF_JUMP{windowHeight - plagueDoctorRec.height - jumpHeight};
-    const float BOTTOM_OF_JUMP{windowHeight-20 - plagueDoctorRec.height};
+    Rectangle plagueDoctorRec = {float((plagueDoctor.width /6) * frame), 0, 128, 128}; //there are 6 conditions of the sprite to be used, it is framed out in a 128x128 box
+    const float TOP_OF_JUMP{windowHeight - plagueDoctorRec.height - jumpHeight}; // extent of jump
+    const float BOTTOM_OF_JUMP{windowHeight-20 - plagueDoctorRec.height};//  -20 to raise PlagueDoctor off the ground
     Vector2 plagueDoctorPos = {windowWidth / 6 - plagueDoctorRec.width / 6, BOTTOM_OF_JUMP}; //initial postioning of the sprite
 
     int currentFrame = 0;
-    int framesCounter = 0;
-    int framesSpeed = 8;    
+    int runningTime = 0;
+    int runningSpeed = 8;    
+
+
+    //Rat collision object
+    Texture2D rat = LoadTexture("resources/textures/rat.png");
+    Rectangle ratRec = {float (rat.width) , 0, 105, 50};    
+
+    Vector2 ratPos = {ratPos.x = windowWidth - ratRec.width, ratPos.y = windowHeight- 20 - ratRec.height};
+
     
 
+
+   
+
    //background
-   Texture2D background = LoadTexture("resources/textures/england_background.png");
+    Texture2D background = LoadTexture("resources/textures/england_background.png");
     Texture2D midground = LoadTexture("resources/textures/england_midground.png");
     Texture2D foreground = LoadTexture("resources/textures/england_foreground.png");
 
@@ -59,11 +71,11 @@ while(!WindowShouldClose()) //as long as the window is not closed do the actions
 
 // redundant took out gravity const float deltaTime{GetFrameTime()}
 
-    framesCounter++;
+    runningTime++;
 
-        if (framesCounter >= (60/framesSpeed))
+        if (runningTime >= (60/runningSpeed))
         {
-            framesCounter = 0;
+            runningTime = 0.0;
             currentFrame++;
 
             if (currentFrame > 5) currentFrame = 0;
@@ -96,7 +108,7 @@ DrawTextureEx(background, (Vector2){ scrollingBack, 20 }, 0.0f, 2.0f, WHITE);
             DrawTextureEx(midground, (Vector2){ midground.width*2 + scrollingMid, 20 }, 0.0f, 2.0f, WHITE);
 
             // Draw foreground image twice
-            DrawTextureEx(foreground, (Vector2){ scrollingFore, 70 }, 0.0f, 2.0f, WHITE);
+            DrawTextureEx(foreground, (Vector2){ scrollingFore, 70 }, 0.0f, 2.0f, WHITE); //scrolling speed
             DrawTextureEx(foreground, (Vector2){ foreground.width*2 + scrollingFore, 70 }, 0.0f, 2.0f, WHITE);
 
 DrawTextEx(font, msg, fontPosition, (float)font.baseSize*2.0f, 10, RED);
@@ -105,6 +117,7 @@ DrawTextEx(font, msg, fontPosition, (float)font.baseSize*2.0f, 10, RED);
 
 DrawTextureRec(plagueDoctor, plagueDoctorRec, plagueDoctorPos, WHITE);  // Draw part of the texture
 
+DrawTextureRec (rat, ratRec,ratPos,WHITE);
 
         // obselete on hold for testing ---> plagueDoctorRec_posX += direction; if (plagueDoctorRec_posX<0||plagueDoctorRec_posX>1200){direction *=-1;}
          // if(plagueDoctor.X<0){PlagueDoctor.X=0}
@@ -135,7 +148,7 @@ DrawTextureRec(plagueDoctor, plagueDoctorRec, plagueDoctorPos, WHITE);  // Draw 
 
             if (plagueDoctorPos.y <= (TOP_OF_JUMP))
             {
-                jumpDirection *= CHANGE_DIRECTION;
+                jumpDirection *= DIRECTION;
             }
             else if (plagueDoctorPos.y >= BOTTOM_OF_JUMP)
             {
@@ -143,7 +156,11 @@ DrawTextureRec(plagueDoctor, plagueDoctorRec, plagueDoctorPos, WHITE);  // Draw 
                 isJumping = !isJumping;
                 jumpDirection = MOVING_UP;
             }
+
+
         }
+
+          ratPos.x += ratVel;
 
    ClearBackground(WHITE);
 EndDrawing();
@@ -151,6 +168,7 @@ EndDrawing();
 
 UnloadFont(font);
 UnloadTexture(plagueDoctor);
+UnloadTexture(rat);
 UnloadTexture(background);
 UnloadTexture(midground);
 UnloadTexture(foreground);
